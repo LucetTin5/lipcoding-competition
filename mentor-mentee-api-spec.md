@@ -40,11 +40,11 @@
 
 - `200 OK`
 
-    ```jsonc
-    {
-      "token": "JWT_TOKEN"
-    }
-    ```
+  ```jsonc
+  {
+    "token": "JWT_TOKEN"
+  }
+  ```
 
 - `400 Bad request`: 요청 payload 형식이 틀렸을 경우
 - `401 Unauthorized`: 로그인에 실패했을 경우
@@ -62,34 +62,34 @@
 
 - `200 OK`
 
-    ```jsonc
-    // 멘토
-    {
-      "id": 1,
-      "email": "user@example.com",
-      "role": "mentor",
-      "profile": {
-        "name": "Alice",
-        "bio": "Frontend mentor",
-        "imageUrl": "/images/mentor/1",
-        "skills": ["React", "Vue"]
-      }
+  ```jsonc
+  // 멘토
+  {
+    "id": 1,
+    "email": "user@example.com",
+    "role": "mentor",
+    "profile": {
+      "name": "Alice",
+      "bio": "Frontend mentor",
+      "imageUrl": "/images/mentor/1",
+      "skills": ["React", "Vue"]
     }
-    ```
+  }
+  ```
 
-    ```jsonc
-    // 멘티
-    {
-      "id": 10,
-      "email": "user@example.com",
-      "role": "mentee",
-      "profile": {
-        "name": "Alice",
-        "bio": "Frontend mentor",
-        "imageUrl": "/images/mentee/10"
-      }
+  ```jsonc
+  // 멘티
+  {
+    "id": 10,
+    "email": "user@example.com",
+    "role": "mentee",
+    "profile": {
+      "name": "Alice",
+      "bio": "Frontend mentor",
+      "imageUrl": "/images/mentee/10"
     }
-    ```
+  }
+  ```
 
 - `401 Unauthorized`: 인증 실패했을 경우
 - `500 Internal server error`: 처리중 에러가 생겼을 경우
@@ -141,34 +141,34 @@
 
 - `200 OK`
 
-    ```jsonc
-    // 멘토
-    {
-      "id": 1,
-      "email": "user@example.com",
-      "role": "mentor",
-      "profile": {
-        "name": "김앞단",
-        "bio": "Frontend mentor",
-        "imageUrl": "/images/mentor/1",
-        "skills": ["React", "Vue"]
-      }
+  ```jsonc
+  // 멘토
+  {
+    "id": 1,
+    "email": "user@example.com",
+    "role": "mentor",
+    "profile": {
+      "name": "김앞단",
+      "bio": "Frontend mentor",
+      "imageUrl": "/images/mentor/1",
+      "skills": ["React", "Vue"]
     }
-    ```
+  }
+  ```
 
-    ```jsonc
-    // 멘티
-    {
-      "id": 21,
-      "email": "user@example.com",
-      "role": "mentee",
-      "profile": {
-        "name": "이뒷단",
-        "bio": "Passionate backend developer",
-        "imageUrl": "/images/mentee/21"
-      }
+  ```jsonc
+  // 멘티
+  {
+    "id": 21,
+    "email": "user@example.com",
+    "role": "mentee",
+    "profile": {
+      "name": "이뒷단",
+      "bio": "Passionate backend developer",
+      "imageUrl": "/images/mentee/21"
     }
-    ```
+  }
+  ```
 
 - `400 Bad request`: 요청 payload 형식이 틀렸을 경우
 - `401 Unauthorized`: 인증 실패했을 경우
@@ -187,14 +187,14 @@
 - `skill=<sill_set>`
 
   > **NOTE**:
-  > 
+  >
   > - 한 번에 한 가지 Skill Set만 검색할 수 있습니다. 예를 들어, `react` 또는 `spring` 처럼 키워드 하나만 검색할 수 있지, `react, spring` 처럼 두 개 이상의 키워드를 동시에 검색할 수 없습니다.
   > - 쿼리 파라미터를 제공하지 않으면 전체 멘토 리스트를 반환합니다.
 
 - `order_by=<skill_or_name>`
 
   > **NOTE**:
-  > 
+  >
   > - 다수의 멘토를 검색할 경우 skill 또는 name 을 기준으로 멘토 리스트를 오름차순으로 정렬합니다.
   > - 쿼리 파라미터를 제공하지 않으면 mentor ID 기준 오름차순으로 정렬합니다.
 
@@ -202,35 +202,35 @@
 
 - `200 OK`
 
-    ```jsonc
-    // 조회 결과 없을 경우
-    []
-    ```
+  ```jsonc
+  // 조회 결과 없을 경우
+  []
+  ```
 
-    ```jsonc
-    // 조회 결과 있을 경우
-    [
-      {
-        "id": 3,
-        "email": "user@example.com",
-        "role": "mentor",
-        "profile": {
-          "name": "김앞단",
-          "bio": "Frontend mentor",
-          "imageUrl": "/images/mentor/3",
-          "skills": ["React", "Vue"]
-        }
-      },
-      {
-        "id": 4,
-        "name": "이뒷단",
-        "role": "mentor",
-        "bio": "Backend mentor",
-        "imageUrl": "/images/mentor/4",
-        "skills": ["Spring Boot", "FastAPI"]
+  ```jsonc
+  // 조회 결과 있을 경우
+  [
+    {
+      "id": 3,
+      "email": "user@example.com",
+      "role": "mentor",
+      "profile": {
+        "name": "김앞단",
+        "bio": "Frontend mentor",
+        "imageUrl": "/images/mentor/3",
+        "skills": ["React", "Vue"]
       }
-    ]
-    ```
+    },
+    {
+      "id": 4,
+      "name": "이뒷단",
+      "role": "mentor",
+      "bio": "Backend mentor",
+      "imageUrl": "/images/mentor/4",
+      "skills": ["Spring Boot", "FastAPI"]
+    }
+  ]
+  ```
 
 - `401 Unauthorized`: 인증 실패했을 경우
 - `500 Internal server error`: 처리중 에러가 생겼을 경우
@@ -257,15 +257,15 @@
 
 - `200 OK`
 
-    ```jsonc
-    {
-      "id": 1,
-      "mentorId": 3,
-      "menteeId": 4,
-      "message": "멘토링 받고 싶어요!",
-      "status": "pending"
-    }
-    ```
+  ```jsonc
+  {
+    "id": 1,
+    "mentorId": 3,
+    "menteeId": 4,
+    "message": "멘토링 받고 싶어요!",
+    "status": "pending"
+  }
+  ```
 
 - `400 Bad request`: 요청 payload 형식이 틀렸을 경우 또는 멘토가 존재하지 않을 경우
 - `401 Unauthorized`: 인증 실패했을 경우
@@ -281,38 +281,38 @@
 
 - `200 OK`
 
-    ```jsonc
-    [
-      {
-        "id": 11,
-        "mentorId": 5,
-        "menteeId": 1,
-        "message": "멘토링 받고 싶어요!",
-        "status": "pending"
-      },
-      {
-        "id": 12,
-        "mentorId": 5,
-        "menteeId": 2,
-        "message": "멘토링 받고 싶어요!",
-        "status": "accepted"
-      },
-      {
-        "id": 13,
-        "mentorId": 5,
-        "menteeId": 3,
-        "message": "멘토링 받고 싶어요!",
-        "status": "rejected"
-      },
-      {
-        "id": 14,
-        "mentorId": 5,
-        "menteeId": 4,
-        "message": "멘토링 받고 싶어요!",
-        "status": "cancelled"
-      }
-    ]
-    ```
+  ```jsonc
+  [
+    {
+      "id": 11,
+      "mentorId": 5,
+      "menteeId": 1,
+      "message": "멘토링 받고 싶어요!",
+      "status": "pending"
+    },
+    {
+      "id": 12,
+      "mentorId": 5,
+      "menteeId": 2,
+      "message": "멘토링 받고 싶어요!",
+      "status": "accepted"
+    },
+    {
+      "id": 13,
+      "mentorId": 5,
+      "menteeId": 3,
+      "message": "멘토링 받고 싶어요!",
+      "status": "rejected"
+    },
+    {
+      "id": 14,
+      "mentorId": 5,
+      "menteeId": 4,
+      "message": "멘토링 받고 싶어요!",
+      "status": "cancelled"
+    }
+  ]
+  ```
 
 - `401 Unauthorized`: 인증 실패했을 경우
 - `500 Internal server error`: 처리중 에러가 생겼을 경우
@@ -327,34 +327,34 @@
 
 - `200 OK`
 
-    ```jsonc
-    [
-      {
-        "id": 11,
-        "mentorId": 1,
-        "menteeId": 10,
-        "status": "pending"
-      },
-      {
-        "id": 12,
-        "mentorId": 2,
-        "menteeId": 10,
-        "status": "accepted"
-      },
-      {
-        "id": 13,
-        "mentorId": 3,
-        "menteeId": 10,
-        "status": "rejected"
-      },
-      {
-        "id": 14,
-        "mentorId": 4,
-        "menteeId": 10,
-        "status": "cancelled"
-      }
-    ]
-    ```
+  ```jsonc
+  [
+    {
+      "id": 11,
+      "mentorId": 1,
+      "menteeId": 10,
+      "status": "pending"
+    },
+    {
+      "id": 12,
+      "mentorId": 2,
+      "menteeId": 10,
+      "status": "accepted"
+    },
+    {
+      "id": 13,
+      "mentorId": 3,
+      "menteeId": 10,
+      "status": "rejected"
+    },
+    {
+      "id": 14,
+      "mentorId": 4,
+      "menteeId": 10,
+      "status": "cancelled"
+    }
+  ]
+  ```
 
 - `401 Unauthorized`: 인증 실패했을 경우
 - `500 Internal server error`: 처리중 에러가 생겼을 경우
@@ -369,15 +369,15 @@
 
 - `200 OK`
 
-    ```jsonc
-    {
-      "id": 11,
-      "mentorId": 2,
-      "menteeId": 1,
-      "message": "멘토링 받고 싶어요!",
-      "status": "accepted"
-    }
-    ```
+  ```jsonc
+  {
+    "id": 11,
+    "mentorId": 2,
+    "menteeId": 1,
+    "message": "멘토링 받고 싶어요!",
+    "status": "accepted"
+  }
+  ```
 
 - `404 Not found`: 매칭 요청 ID 값이 존재하지 않을 경우
 - `401 Unauthorized`: 인증 실패했을 경우
@@ -393,15 +393,15 @@
 
 - `200 OK`
 
-    ```jsonc
-    {
-      "id": 11,
-      "mentorId": 2,
-      "menteeId": 1,
-      "message": "멘토링 받고 싶어요!",
-      "status": "rejected"
-    }
-    ```
+  ```jsonc
+  {
+    "id": 11,
+    "mentorId": 2,
+    "menteeId": 1,
+    "message": "멘토링 받고 싶어요!",
+    "status": "rejected"
+  }
+  ```
 
 - `404 Not found`: 매칭 요청 ID 값이 존재하지 않을 경우
 - `401 Unauthorized`: 인증 실패했을 경우
@@ -417,15 +417,15 @@
 
 - `200 OK`
 
-    ```jsonc
-    {
-      "id": 11,
-      "mentorId": 2,
-      "menteeId": 12,
-      "message": "멘토링 받고 싶어요!",
-      "status": "cancelled"
-    }
-    ```
+  ```jsonc
+  {
+    "id": 11,
+    "mentorId": 2,
+    "menteeId": 12,
+    "message": "멘토링 받고 싶어요!",
+    "status": "cancelled"
+  }
+  ```
 
 - `404 Not found`: 매칭 요청 ID 값이 존재하지 않을 경우
 - `401 Unauthorized`: 인증 실패했을 경우

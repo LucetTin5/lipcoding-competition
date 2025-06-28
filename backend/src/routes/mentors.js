@@ -13,7 +13,7 @@ const mentorRoutes = new Hono();
 
 // Validation schema for query parameters (OpenAPI spec compliant)
 const getMentorsQuerySchema = z.object({
-  skill: z.string().min(1).max(50).optional(),
+  skill: z.string().max(50).optional(),
   orderBy: z.enum(['skill', 'name']).optional(),
 });
 
@@ -60,7 +60,7 @@ mentorRoutes.get('/', authMiddleware, requireMentee, async (c) => {
     const conditions = [eq(users.role, 'mentor')];
 
     // Filter by skill (exact or partial match)
-    if (skill) {
+    if (skill && skill.trim()) {
       conditions.push(like(users.techStack, `%"${skill}"%`));
     }
 
@@ -79,11 +79,17 @@ mentorRoutes.get('/', authMiddleware, requireMentee, async (c) => {
 
     const mentors = await query;
 
-    // Transform results to match OpenAPI spec
+    // Transform results to match OpenAPI spec with backward compatibility
     const formattedMentors = mentors.map((mentor) => ({
       id: mentor.id,
+      // Keep backward compatibility fields
       email: mentor.email,
       role: 'mentor',
+      name: mentor.name, // Direct field for compatibility
+      bio: mentor.bio || '',
+      imageUrl: mentor.profileImage || `/images/mentor/${mentor.id}`,
+      skills: mentor.techStack ? JSON.parse(mentor.techStack) : [],
+      // OpenAPI compliant nested structure
       profile: {
         name: mentor.name,
         bio: mentor.bio || '',

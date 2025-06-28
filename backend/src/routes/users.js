@@ -32,12 +32,17 @@ const updateMenteeProfileSchema = z.object({
   image: z.string().optional(), // Base64 encoded image
 });
 
-// Legacy schema for /me endpoint
+// Legacy schema for /me endpoint and backward compatibility
 const updateProfileSchema = z.object({
   name: z.string().min(1).max(100).trim().optional(),
   bio: z.string().max(1000).optional(),
   profileImage: z.string().optional(),
   techStack: z.array(z.string()).optional(),
+  // Also accept OpenAPI format fields for compatibility
+  id: z.number().int().positive().optional(),
+  role: z.enum(['mentor', 'mentee']).optional(),
+  image: z.string().optional(),
+  skills: z.array(z.string()).optional(),
 });
 
 // Get current user profile
@@ -100,18 +105,26 @@ userRoutes.get('/me', authMiddleware, requireUser, async (c) => {
   }
 });
 
-// Update user profile (OpenAPI spec compliant)
+// Update user profile (OpenAPI spec compliant + backward compatibility)
 userRoutes.put('/profile', authMiddleware, requireUser, async (c) => {
   try {
     const currentUser = c.get('user');
     const body = await c.req.json();
 
-    // Validate based on user role
+    // Try OpenAPI schema first, then fall back to legacy schema
     let validationResult;
+    let isLegacyFormat = false;
+
     if (currentUser.role === 'mentor') {
       validationResult = updateMentorProfileSchema.safeParse(body);
     } else {
       validationResult = updateMenteeProfileSchema.safeParse(body);
+    }
+
+    // If OpenAPI validation fails, try legacy format
+    if (!validationResult.success) {
+      validationResult = updateProfileSchema.safeParse(body);
+      isLegacyFormat = true;
     }
 
     if (!validationResult.success) {
@@ -130,8 +143,8 @@ userRoutes.put('/profile', authMiddleware, requireUser, async (c) => {
 
     const updateData = validationResult.data;
 
-    // Verify user ID matches current user
-    if (updateData.id !== currentUser.id) {
+    // For OpenAPI format, verify user ID matches current user
+    if (!isLegacyFormat && updateData.id && updateData.id !== currentUser.id) {
       return c.json(
         {
           error: 'Access denied',
@@ -149,11 +162,12 @@ userRoutes.put('/profile', authMiddleware, requireUser, async (c) => {
     if (updateData.name) updates.name = updateData.name;
     if (updateData.bio !== undefined) updates.bio = updateData.bio;
 
-    // Handle profile image
-    if (updateData.image) {
+    // Handle profile image (both formats)
+    if (updateData.image || updateData.profileImage) {
+      const imageData = updateData.image || updateData.profileImage;
       try {
         const imageUrl = await saveProfileImage(
-          updateData.image,
+          imageData,
           currentUser.role,
           currentUser.id
         );
@@ -170,9 +184,10 @@ userRoutes.put('/profile', authMiddleware, requireUser, async (c) => {
       }
     }
 
-    // Handle mentor skills
-    if (updateData.skills && currentUser.role === 'mentor') {
-      updates.techStack = JSON.stringify(updateData.skills);
+    // Handle mentor skills (both formats)
+    if ((updateData.skills || updateData.techStack) && currentUser.role === 'mentor') {
+      const skillsData = updateData.skills || updateData.techStack;
+      updates.techStack = JSON.stringify(skillsData);
     }
 
     // Update user in database

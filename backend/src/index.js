@@ -30,13 +30,9 @@ app.use(
   })
 );
 
-// Health check
+// Health check - redirect to Swagger UI
 app.get('/', (c) => {
-  return c.json({
-    message: 'Mentor-Mentee Matching API',
-    version: '1.0.0',
-    status: 'healthy',
-  });
+  return c.redirect('/swagger-ui');
 });
 
 // API routes

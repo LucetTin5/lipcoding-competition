@@ -15,8 +15,8 @@ const matchRoutes = new Hono();
 // Validation schemas
 const createMatchRequestSchema = z.object({
   mentorId: z.number().int().positive(),
-  menteeId: z.number().int().positive(),
   message: z.string().min(1).max(500),
+  menteeId: z.number().int().positive().optional(), // Accept but ignore for frontend compatibility
 });
 
 // POST /match-requests - Create match request (mentee only)

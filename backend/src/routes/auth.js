@@ -124,19 +124,14 @@ auth.post('/login', async (c) => {
   try {
     const body = await c.req.json();
 
-    // Validate input
+    // Validate input - per OpenAPI spec, missing fields should return 401
     const validationResult = loginSchema.safeParse(body);
     if (!validationResult.success) {
-      const errorMessages = validationResult.error.errors
-        .map((err) => `${err.path.join('.')}: ${err.message}`)
-        .join(', ');
-
       return c.json(
         {
-          error: 'Validation failed',
-          message: errorMessages,
+          error: 'Unauthorized - login failed',
         },
-        400
+        401
       );
     }
 
@@ -153,8 +148,7 @@ auth.post('/login', async (c) => {
       // Same error message for security (don't reveal if email exists)
       return c.json(
         {
-          error: 'Invalid credentials',
-          message: 'Email or password is incorrect',
+          error: 'Unauthorized - login failed',
         },
         401
       );
@@ -165,8 +159,7 @@ auth.post('/login', async (c) => {
     if (!isValidPassword) {
       return c.json(
         {
-          error: 'Invalid credentials',
-          message: 'Email or password is incorrect',
+          error: 'Unauthorized - login failed',
         },
         401
       );
