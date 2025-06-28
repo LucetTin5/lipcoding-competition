@@ -1,0 +1,38 @@
+{
+  "name": "mentor-mentee-backend",
+  "version": "1.0.0",
+  "description": "Backend API server for mentor-mentee matching app",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js",
+    "build": "echo 'Backend build complete'",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "node create-db.js",
+    "db:reset": "rm -f database.sqlite && node create-db.js",
+    "db:test": "node test-db.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.8.0",
+    "@hono/swagger-ui": "^0.2.0",
+    "@hono/zod-openapi": "^0.19.9",
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^9.2.0",
+    "cors": "^2.8.5",
+    "drizzle-orm": "^0.29.0",
+    "hono": "^4.0.0",
+    "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.2",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/better-sqlite3": "^7.6.8",
+    "@types/jsonwebtoken": "^9.0.5",
+    "drizzle-kit": "^0.20.0"
+  }
+}

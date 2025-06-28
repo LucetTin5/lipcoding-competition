@@ -1,0 +1,28 @@
+{
+  "name": "mentor-mentee-app",
+  "version": "1.0.0",
+  "description": "Mentor-Mentee Matching Application",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm -F mentor-mentee-backend dev\" \"pnpm -F mentor-mentee-frontend dev\"",
+    "dev:backend": "nohup pnpm -F mentor-mentee-backend dev > backend.log 2>&1 &",
+    "dev:frontend": "nohup pnpm -F mentor-mentee-frontend dev > frontend.log 2>&1 &",
+    "start": "concurrently --kill-others --restart-tries 3 \"pnpm -F mentor-mentee-backend dev\" \"pnpm -F mentor-mentee-frontend dev\"",
+    "build": "pnpm -F mentor-mentee-backend build && pnpm -F mentor-mentee-frontend build",
+    "install:all": "pnpm install",
+    "stop": "pkill -f 'node.*mentor-mentee' || pkill -f 'concurrently' || true",
+    "logs:backend": "tail -f backend.log",
+    "logs:frontend": "tail -f frontend.log",
+    "logs": "tail -f backend.log frontend.log"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=8.0.0"
+  },
+  "volta": {
+    "node": "20.19.3"
+  }
+}
