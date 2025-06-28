@@ -114,6 +114,8 @@ matchRoutes.post(
         menteeId: newMatch.menteeId,
         message: newMatch.message,
         status: newMatch.status,
+        createdAt: newMatch.createdAt,
+        updatedAt: newMatch.updatedAt,
       });
     } catch (error) {
       console.error('Create match request error:', error);
@@ -144,8 +146,16 @@ matchRoutes.get(
           menteeId: matches.menteeId,
           message: matches.message,
           status: matches.status,
+          createdAt: matches.createdAt,
+          updatedAt: matches.updatedAt,
+          mentee: {
+            name: users.name,
+            email: users.email,
+            profileImage: users.profileImage,
+          },
         })
         .from(matches)
+        .leftJoin(users, eq(matches.menteeId, users.id))
         .where(eq(matches.mentorId, currentUser.id))
         .orderBy(matches.createdAt);
 
@@ -177,9 +187,18 @@ matchRoutes.get(
           id: matches.id,
           mentorId: matches.mentorId,
           menteeId: matches.menteeId,
+          message: matches.message,
           status: matches.status,
+          createdAt: matches.createdAt,
+          updatedAt: matches.updatedAt,
+          mentor: {
+            name: users.name,
+            email: users.email,
+            profileImage: users.profileImage,
+          },
         })
         .from(matches)
+        .leftJoin(users, eq(matches.mentorId, users.id))
         .where(eq(matches.menteeId, currentUser.id))
         .orderBy(matches.createdAt);
 

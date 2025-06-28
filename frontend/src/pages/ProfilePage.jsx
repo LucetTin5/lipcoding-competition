@@ -36,7 +36,7 @@ const ProfilePage = ({ user, setUser }) => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axiosInstance.get('/users/me');
+      const response = await axiosInstance.get('/me');
       setProfile(response.data);
     } catch (error) {
       setError('Failed to load profile');
@@ -77,7 +77,7 @@ const ProfilePage = ({ user, setUser }) => {
     setSuccess('');
 
     try {
-      const response = await axiosInstance.put('/users/me', profile);
+      const response = await axiosInstance.put('/profile', profile);
       setProfile(response.data);
 
       // Update user in local state if name changed

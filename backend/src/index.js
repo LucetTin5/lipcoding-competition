@@ -42,7 +42,8 @@ app.get('/', (c) => {
 // API routes
 const api = new Hono();
 api.route('/', authRoutes);
-api.route('/users', userRoutes);
+api.route('/', userRoutes); // This provides /me and /profile endpoints
+api.route('/users', userRoutes); // Keep for legacy support
 api.route('/mentors', mentorRoutes);
 api.route('/', matchRoutes);
 
@@ -52,11 +53,17 @@ app.route('/api', api);
 app.get(
   '/swagger-ui',
   swaggerUI({
-    url: '/openapi.json',
+    url: '/v3/api-docs',
   })
 );
 
-// OpenAPI spec endpoint
+// OpenAPI spec endpoint - new v3/api-docs endpoint
+app.get('/v3/api-docs', (c) => {
+  const openAPIData = generateDynamicOpenAPISpec();
+  return c.json(openAPIData);
+});
+
+// Legacy OpenAPI spec endpoint for backwards compatibility
 app.get('/openapi.json', (c) => {
   const openAPIData = generateDynamicOpenAPISpec();
   return c.json(openAPIData);
@@ -151,7 +158,10 @@ const port = process.env.PORT || 8080;
 console.log(`🚀 Server is running on http://localhost:${port}`);
 console.log(`📚 Swagger UI available at http://localhost:${port}/swagger-ui`);
 console.log(
-  `📋 OpenAPI spec available at http://localhost:${port}/openapi.json`
+  `📋 OpenAPI spec available at http://localhost:${port}/v3/api-docs`
+);
+console.log(
+  `📋 Legacy OpenAPI spec available at http://localhost:${port}/openapi.json`
 );
 
 serve({

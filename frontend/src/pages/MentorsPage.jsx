@@ -36,6 +36,7 @@ const MentorsPage = ({ user }) => {
   const [mentors, setMentors] = useState([]);
   const [filteredMentors, setFilteredMentors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [techFilter, setTechFilter] = useState('');
   const [sortBy, setSortBy] = useState('name');
@@ -58,17 +59,38 @@ const MentorsPage = ({ user }) => {
 
   const fetchMentors = async () => {
     try {
-      const response = await axiosInstance.get('/mentors', {
-        params: {
-          search: searchTerm,
-          tech_stack: techFilter,
-          sort_by: sortBy,
-          sort_order: sortOrder,
-        },
-      });
-      setMentors(response.data);
+      setError(null);
+      console.log('Fetching mentors...');
+
+      // Build query parameters to match backend API
+      const params = {};
+      if (techFilter) {
+        params.skill = techFilter;
+      }
+      if (sortBy === 'name' || sortBy === 'tech_stack') {
+        params.orderBy = sortBy === 'tech_stack' ? 'skill' : 'name';
+      }
+
+      const response = await axiosInstance.get('/mentors', { params });
+      console.log('Mentors response:', response.data);
+
+      // Transform API response to match frontend expectations
+      const transformedMentors = response.data.map((mentor) => ({
+        id: mentor.id,
+        name: mentor.profile.name,
+        bio: mentor.profile.bio,
+        profileImage: mentor.profile.imageUrl,
+        techStack: mentor.profile.skills || [],
+      }));
+
+      setMentors(transformedMentors);
     } catch (error) {
       console.error('Failed to fetch mentors:', error);
+      setError(
+        error.response?.data?.message ||
+          error.message ||
+          'Failed to fetch mentors'
+      );
     } finally {
       setLoading(false);
     }
@@ -121,9 +143,10 @@ const MentorsPage = ({ user }) => {
     setRequestSuccess('');
 
     try {
-      await axiosInstance.post('/matches', {
-        mentorId: selectedMentor.id,
-        message: requestMessage,
+      await axiosInstance.post('/match-requests', {
+        mentorId: parseInt(selectedMentor.id),
+        menteeId: parseInt(user.id),
+        message: requestMessage || '',
       });
 
       setRequestSuccess('Request sent successfully!');
@@ -144,6 +167,30 @@ const MentorsPage = ({ user }) => {
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center h-64">
           <div className="text-lg">Loading mentors...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="flex items-center justify-center h-64">
+          <Alert variant="destructive" className="max-w-md">
+            <AlertDescription>
+              <div>
+                <p className="font-medium">Error loading mentors:</p>
+                <p>{error}</p>
+                <Button
+                  onClick={fetchMentors}
+                  className="mt-4"
+                  variant="outline"
+                >
+                  Try Again
+                </Button>
+              </div>
+            </AlertDescription>
+          </Alert>
         </div>
       </div>
     );

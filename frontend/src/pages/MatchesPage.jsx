@@ -49,7 +49,12 @@ const MatchesPage = ({ user }) => {
 
   const fetchMatches = async () => {
     try {
-      const response = await axiosInstance.get('/matches');
+      let response;
+      if (user.role === 'mentor') {
+        response = await axiosInstance.get('/match-requests/incoming');
+      } else {
+        response = await axiosInstance.get('/match-requests/outgoing');
+      }
       setMatches(response.data);
     } catch (error) {
       setError('Failed to load matches');
@@ -64,7 +69,12 @@ const MatchesPage = ({ user }) => {
     setSuccess('');
 
     try {
-      await axiosInstance.put(`/matches/${matchId}`, { status });
+      let response;
+      if (status === 'accepted') {
+        response = await axiosInstance.put(`/match-requests/${matchId}/accept`);
+      } else if (status === 'rejected') {
+        response = await axiosInstance.put(`/match-requests/${matchId}/reject`);
+      }
 
       // Update local state
       setMatches((prev) =>
@@ -90,7 +100,7 @@ const MatchesPage = ({ user }) => {
     setSuccess('');
 
     try {
-      await axiosInstance.delete(`/matches/${matchId}`);
+      await axiosInstance.delete(`/match-requests/${matchId}`);
 
       // Remove from local state
       setMatches((prev) => prev.filter((match) => match.id !== matchId));
@@ -271,16 +281,21 @@ const MatchesPage = ({ user }) => {
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                               <span>
                                 Sent{' '}
-                                {new Date(match.createdAt).toLocaleDateString()}
+                                {match.createdAt
+                                  ? new Date(
+                                      match.createdAt
+                                    ).toLocaleDateString()
+                                  : 'Unknown date'}
                               </span>
-                              {match.updatedAt !== match.createdAt && (
-                                <span>
-                                  Updated{' '}
-                                  {new Date(
-                                    match.updatedAt
-                                  ).toLocaleDateString()}
-                                </span>
-                              )}
+                              {match.updatedAt &&
+                                match.updatedAt !== match.createdAt && (
+                                  <span>
+                                    Updated{' '}
+                                    {new Date(
+                                      match.updatedAt
+                                    ).toLocaleDateString()}
+                                  </span>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -339,12 +354,7 @@ const MatchesPage = ({ user }) => {
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>
-                                <Button
-                                  variant="outline"
-                                  onClick={() => setDeleteConfirm(null)}
-                                >
-                                  Cancel
-                                </Button>
+                                <Button variant="outline">Cancel</Button>
                                 <Button
                                   variant="destructive"
                                   onClick={() => handleDeleteMatch(match.id)}
