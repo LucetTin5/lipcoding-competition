@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "Mentor-Mentee Matching Application",
   "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
   "scripts": {
-    "dev": "concurrently \"pnpm -F mentor-mentee-backend dev\" \"pnpm -F mentor-mentee-frontend dev\"",
-    "dev:backend": "nohup pnpm -F mentor-mentee-backend dev > backend.log 2>&1 &",
-    "dev:frontend": "nohup pnpm -F mentor-mentee-frontend dev > frontend.log 2>&1 &",
-    "start": "concurrently --kill-others --restart-tries 3 \"pnpm -F mentor-mentee-backend dev\" \"pnpm -F mentor-mentee-frontend dev\"",
-    "build": "pnpm -F mentor-mentee-backend build && pnpm -F mentor-mentee-frontend build",
-    "install:all": "pnpm install",
+    "dev": "concurrently \"npm -w mentor-mentee-backend run dev\" \"npm -w mentor-mentee-frontend run dev\"",
+    "dev:backend": "nohup npm -w mentor-mentee-backend run dev > backend.log 2>&1 &",
+    "dev:frontend": "nohup npm -w mentor-mentee-frontend run dev > frontend.log 2>&1 &",
+    "start": "concurrently --kill-others --restart-tries 3 \"npm -w mentor-mentee-backend run dev\" \"npm -w mentor-mentee-frontend run dev\"",
+    "build": "npm -w mentor-mentee-backend run build && npm -w mentor-mentee-frontend run build",
+    "install:all": "npm install",
     "stop": "pkill -f 'node.*mentor-mentee' || pkill -f 'concurrently' || true",
     "logs:backend": "tail -f backend.log",
     "logs:frontend": "tail -f frontend.log",
